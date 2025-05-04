@@ -47,11 +47,11 @@ void print_ascii_logo()
 
 int main()
 {
-	struct utsname sysinfo;
-	uname(&sysinfo);
+	struct utsname ust;
+	uname(&ust);
 
 	struct passwd *pw = getpwuid(getuid());
-	struct sysinfo sys_info;
+	struct sysinfo info;
 
 	char resolution[32];
 	char gpu[128];
@@ -59,18 +59,25 @@ int main()
 	get_screen_resolution(resolution, sizeof(resolution));
 	get_gpu_info(gpu, sizeof(gpu));
 
-	long total_RAM = sys_info.totalram / 1024 / 1024;
-	long free_RAM = sys_info.freeram / 1024 / 1024;
+	/**
+	// DEBUG below
+	printf("current value of gpu:%s\n current pointer to gpu:%p\n", gpu, &gpu);
+	printf("Press any key to continue...");
+	getchar();
+	**/
+
+	long total_RAM = info.totalram / 1024 / 1024;
+	long free_RAM = info.freeram / 1024 / 1024;
 
 	print_ascii_logo();
 
 	printf("\033[1;32mUser:    \033[0m%s\n", pw->pw_name);
-	printf("\033[1;32mOS:      \033[0m%s %s\n", sysinfo.sysname, sysinfo.release);
-	printf("\033[1;32mKernel:  \033[0m%s\n", sysinfo.version);
-	printf("\033[1;32mMachine: \033[0m%s\n", sysinfo.machine);
-	printf("\033[1;32mUptime:  \033[0m%ld min\n", sys_info.uptime / 60);
+	printf("\033[1;32mOS:      \033[0m%s %s\n", ust.sysname, ust.release);
+	printf("\033[1;32mKernel:  \033[0m%s\n", ust.version);
+	printf("\033[1;32mMachine: \033[0m%s\n", ust.machine);
+	printf("\033[1;32mUptime:  \033[0m%ld min\n", info.uptime / 60);
 	printf("\033[1;32mRAM:     \033[0m%ldMB / %ldMB\n", total_RAM - free_RAM, total_RAM);
-	printf("\033[1;32mScreen:  \033[0m%s\n", resolution);
+	printf("\033[1;32mScreen Resolution:  \033[0m%s\n", resolution);
 	printf("\033[1;32mGPU:     \033[0m%s\n", gpu);
 
 	return 0;
